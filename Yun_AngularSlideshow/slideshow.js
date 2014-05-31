@@ -1,7 +1,7 @@
 angular.module('slideshow', [])
 
 .controller('SlideshowController', function($scope, $timeout, $http) {
-    var pictures = ['1375995225.png', '1375995954.png'];
+    var pictures = ['1375995225.png'];
     var delay = 2000;
     var checkForNewPicturesDelay = 30000;
     var currentPictureIndex = 0;
