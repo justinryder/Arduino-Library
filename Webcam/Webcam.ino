@@ -3,7 +3,7 @@
 
 const int buttonPin = 8;
 const String sdPath = "/mnt/sda1/";
-const String picturesPath = "/www/pictures/";
+const String picturesPath = "/www/slideshow/pictures/";
 
 int buttonState = 0;
 
