@@ -5,10 +5,11 @@
 const String sdPath = "/mnt/sda1/pictures/";
 const String picturesPath = "/www/slideshow/pictures/";
 const String picturesListFile = "/www/slideshow/picturesList.txt";
-const String debugLogFile = "/www/slideshow/debuglog.txt";
-const int potPin = 1;    // select the input pin for the potentiometer
+const int potPin = 1;    // Analog ping for Potentiometer
 const int sensor1Pin=0;  // Analog pin for sensor 1
-int sensorValue = 0;  // variable to store the value coming from the potentiometer
+int potValue = 0;  // variable to store the value coming from the potentiometer
+const bool debugEnabled = false;  // enable debug logging
+const String debugLogFile = "/www/slideshow/debuglog.txt";
 
 Process process;
 String filename;
@@ -17,18 +18,18 @@ void setup()
 {
   Bridge.begin();
   FileSystem.begin();
-  sensorValue = analogRead(potPin);
+  potValue = analogRead(potPin);
   
 }
 
 void loop() 
 {
-  sensorValue = analogRead(potPin);
-  DebugLog("PotValue: " + String(sensorValue));
+  potValue = analogRead(potPin);
+  DebugLog("PotValue: " + String(potValue));
   int val= analogRead(sensor1Pin);
   DebugLog("SensorValue: " + String(val));
  
-  if (val >= sensorValue)
+  if (val >= potValue)
   {
     DebugLog("Taking Picture");
     generateTimestampFilename();
@@ -58,7 +59,7 @@ void processShellCommand(String command)
 void appendToFile(String text, String filename)
 {
   File file = FileSystem.open(filename.c_str(), FILE_APPEND);
-  if (file && text.length()>1)
+  if (file)
   {
     file.println(text);
     file.close();
@@ -67,11 +68,13 @@ void appendToFile(String text, String filename)
 
 void DebugLog(String debugtext)
 {
-  File Debugfile = FileSystem.open(debugLogFile.c_str(), FILE_APPEND);
-  if(Debugfile)
-  {
-    Debugfile.println(debugtext);
-    Debugfile.close();
+  if(debugEnabled) {
+    File Debugfile = FileSystem.open(debugLogFile.c_str(), FILE_APPEND);
+    if(Debugfile)
+    {
+      Debugfile.println(debugtext);
+      Debugfile.close();
+    }
   }
 }
 
