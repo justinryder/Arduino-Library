@@ -23,7 +23,7 @@ angular.module('slideshow', [])
     $timeout(iteratePictures, delay);
 
     function checkForNewPictures() {
-        return $http.get('picturesList.txt')
+        return $http.get('picturesList.txt?d=' + new Date().getTime())
             .success(function(data) {
                 pictures = data.split('\n');
                 pictures.pop();

@@ -6,11 +6,6 @@
                 <link rel="stylesheet" href="styles.css">
         </head>
         <body ng-controller="SlideshowController">
-                <!--
-                <button ng-click="nextPicture()">Next Picture</button>
-                -->
-                <div ng-animate="'animate'">
-                        <img ng-src="pictures/{{currentPicture}}"/>
-                </div>
+                <img ng-animate="'animate'" ng-src="pictures/{{currentPicture}}"/>
         </body>
 </html>
