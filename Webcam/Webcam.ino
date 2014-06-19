@@ -8,8 +8,9 @@ const String picturesListFile = "/www/slideshow/picturesList.txt";
 const int potPin = 1;    // Analog ping for Potentiometer
 const int sensor1Pin=0;  // Analog pin for sensor 1
 int potValue = 0;  // variable to store the value coming from the potentiometer
-const bool debugEnabled = false;  // enable debug logging
+const bool debugEnabled = false;  // enable debug logging to file
 const String debugLogFile = "/www/slideshow/debuglog.txt";
+const bool picturesEnabled = false; // enable or disable picture taking
 
 Process process;
 String filename;
@@ -18,18 +19,18 @@ void setup()
 {
   Bridge.begin();
   FileSystem.begin();
-  potValue = analogRead(potPin);
   
 }
 
 void loop() 
 {
-  potValue = analogRead(potPin);
+  potValue = analogRead(potPin);  // get current value from pot
   DebugLog("PotValue: " + String(potValue));
-  int val= analogRead(sensor1Pin);
+  
+  int val= analogRead(sensor1Pin);  // get current value from sensor
   DebugLog("SensorValue: " + String(val));
  
-  if (val >= potValue)
+  if ((val >= potValue) && picturesEnabled)  // trigger action if sensor >= pot
   {
     DebugLog("Taking Picture");
     generateTimestampFilename();
