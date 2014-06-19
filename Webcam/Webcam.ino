@@ -2,12 +2,14 @@
 #include <Process.h>
 #include <FileIO.h>
 
-const int buttonPin = 8;
 const String sdPath = "/mnt/sda1/pictures/";
 const String picturesPath = "/www/slideshow/pictures/";
 const String picturesListFile = "/www/slideshow/picturesList.txt";
+const String debugLogFile = "/www/slideshow/debuglog.txt";
+const int potPin = 1;    // select the input pin for the potentiometer
+const int sensor1Pin=0;  // Analog pin for sensor 1
+int sensorValue = 0;  // variable to store the value coming from the potentiometer
 
-int buttonState = 0;
 Process process;
 String filename;
 
@@ -15,14 +17,20 @@ void setup()
 {
   Bridge.begin();
   FileSystem.begin();
-  pinMode(buttonPin, INPUT);
+  sensorValue = analogRead(potPin);
+  
 }
 
 void loop() 
 {
-  buttonState = digitalRead(buttonPin);
-  if (buttonState == HIGH)
+  sensorValue = analogRead(potPin);
+  DebugLog("PotValue: " + String(sensorValue));
+  int val= analogRead(sensor1Pin);
+  DebugLog("SensorValue: " + String(val));
+ 
+  if (val >= sensorValue)
   {
+    DebugLog("Taking Picture");
     generateTimestampFilename();
  
     // Take picture
@@ -36,7 +44,9 @@ void loop()
     // Upload to Dropbox
     //process.runShellCommand("python " + sdPath + "upload_process.py " + sdPath + filename);
     //while(process.running());
+    val = 0;
   }
+ 
 }
 
 void processShellCommand(String command)
@@ -48,10 +58,20 @@ void processShellCommand(String command)
 void appendToFile(String text, String filename)
 {
   File file = FileSystem.open(filename.c_str(), FILE_APPEND);
-  if (file)
+  if (file && text.length()>1)
   {
     file.println(text);
     file.close();
+  }
+}
+
+void DebugLog(String debugtext)
+{
+  File Debugfile = FileSystem.open(debugLogFile.c_str(), FILE_APPEND);
+  if(Debugfile)
+  {
+    Debugfile.println(debugtext);
+    Debugfile.close();
   }
 }
 
